@@ -1,31 +1,34 @@
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 export default function Forms() {
   return (
     <>
-    <form>
-      <Inputs>
-      <div>
-          <input
-            type="email"
-            onChange={'e => setEmail(e.target.value)'}
-            placeholder="E-mail"
-            required
-          />
-        </div>
-        <div>
-          <input
-            type="text"
-            onChange={'e => setPassword(e.target.value)'}
-            placeholder="Senha"
-            required
-          />
-        </div>
-        <Button type="submit" name="submit">
-          <p>ENTRAR</p>
-        </Button>
-      </Inputs>
-    </form>
+      <form>
+        <Inputs>
+          <div>
+            <input
+              type="email"
+              onChange={'e => setEmail(e.target.value)'}
+              placeholder="E-mail"
+              required
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              onChange={'e => setPassword(e.target.value)'}
+              placeholder="Senha"
+              required
+            />
+          </div>
+          <Link to={'/subscriptions'}>
+            <Button type="submit" name="submit">
+              <p>ENTRAR</p>
+            </Button>
+          </Link>
+        </Inputs>
+      </form>
     </>
   )
 }
