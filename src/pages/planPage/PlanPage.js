@@ -1,22 +1,26 @@
 import styled from 'styled-components'
 import Forms from './Forms'
 import logoPlan from '../../assets/images/logoplan.png'
+import Modal from './Modal'
+import taskList from '../../assets/images/task-list.png'
+import money from '../../assets/images/money.png'
 
 export default function PlanPage() {
   return (
     <PlanContainer>
+    {/* <Modal /> */}
       <img src={logoPlan} alt="Driven Plus" />
       <h2>Driven Plus</h2>
       <div>
         <div>
-          <img /> <p>Benefícios:</p>
+          <img src={taskList} /> <p>Benefícios:</p>
         </div>
         <ol>
           <li>1. Brindes exclusivos</li>
           <li>2. Materiais bônus de web</li>
         </ol>
         <div>
-          <img /> <p>Preco:</p>
+          <img src={money} /> <p>Preco:</p>
         </div>
         <p>R$ 39,99 cobrados mensalmente</p>
       </div>
@@ -44,6 +48,11 @@ const PlanContainer = styled.div`
 
   >div {
     margin-bottom: 34px;
+  }
+
+  > div > div {
+    display: flex;
+    align-items: center;
   }
 
   >div > div:first-of-type {
