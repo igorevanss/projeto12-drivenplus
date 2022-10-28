@@ -1,21 +1,55 @@
+import axios from 'axios'
+import { useState } from 'react'
 import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
 
 export default function Forms() {
+  const [form, setForm] = useState(
+    {
+      email: "",
+      name: "",
+      cpf: "",
+      password: ""
+    }
+  )
+
+  const navigate = useNavigate()
+
+  function signUp(e) {
+    e.preventDefault()
+
+    axios.post("https://mock-api.driven.com.br/api/v4/driven-plus/auth/sign-up",form)
+    .then(() => {navigate("/")})
+    .catch((res) => {alert(res.response.data.message)})
+  }
+
+  function handleForm(e){
+    const {name, value} = e.target
+    setForm({...form, [name]:value})
+    
+  }
+
+  console.log(form)
+
   return (
-    <form onSubmit={''}>
+    <form onSubmit={signUp}>
       <Inputs>
         <div>
           <input
+            name="name"
             type="text"
-            onChange={'e => setUserName(e.target.value)'}
+            value={form.name}
+            onChange={handleForm}
             placeholder="Nome"
             required
           />
         </div>
         <div>
           <input
-            type="text"
-            onChange={'e => setCpf(e.target.value)'}
+            name="cpf"
+            type="number"
+            value={form.cpf}
+            onChange={handleForm}
             placeholder="CPF"
             required
           />
@@ -23,16 +57,20 @@ export default function Forms() {
 
         <div>
           <input
+            name="email"
             type="email"
-            onChange={'e => setEmail(e.target.value)'}
+            value={form.email}
+            onChange={handleForm}
             placeholder="E-mail"
             required
           />
         </div>
         <div>
           <input
-            type="text"
-            onChange={'e => setPassword(e.target.value)'}
+            name="password"
+            type="password"
+            value={form.password}
+            onChange={handleForm}
             placeholder="Senha"
             required
           />

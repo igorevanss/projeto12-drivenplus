@@ -3,49 +3,46 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import logoPlan from '../../assets/images/logoplan.png'
+import AuthContext from '../../contexts/AuthContext'
+import { useContext } from 'react'
 
 export default function PlansPage() {
-  // const [plans, setPlans] = useState([])
+  
+  const [plans, setPlans] = useState([])
+  const {auth} = useContext(AuthContext)
 
-  // useEffect(() => {
-  //   const promise = axios.get(
-  //     'https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships'
-  //   )
+  useEffect(() => {
+    const promise = axios.get(
+      'https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships', {headers:{'Authorization':`Bearer ${auth}`}}
+    )
 
-  //   promise.then(res => {
-  //     setPlans(res.data)
-  //   })
+    promise.then(res => {
+      setPlans(res.data)
+      console.log(res.data)
+    })
 
-  //   promise.catch(err => {
-  //     console.log(err.response.data)
-  //   })
-  // }, [])
+    promise.catch(err => {
+      console.log(err.response.data.message)
+    })
+  }, [])
 
-  // if (plans.length === 0) {
-  //   return <p>Carregando...</p>
-  // }
+  if (plans.length === 0) {
+    return <p>Carregando...</p>
+  }
+
+  console.log(plans)
 
   return (
     <PlansContainer>
       <h2>Escolha seu Plano</h2>
-      <Link to={'/subscriptions/ID_DO_PLANO'}>
-        <PlanStyle>
-          <img src={logoPlan} />
-          <p>R$ 39,99</p>
+      {plans.map((plan) => (
+        <Link to={`/subscriptions/${plan.id}`}>
+        <PlanStyle key={plan.id}>
+          <img src={plan.image} />
+          <p>{plan.price}</p>
         </PlanStyle>
       </Link>
-      <Link to={''}>
-        <PlanStyle>
-          <img src={logoPlan} />
-          <p>R$ 39,99</p>
-        </PlanStyle>
-      </Link>
-      <Link to={''}>
-        <PlanStyle>
-          <img src={logoPlan} />
-          <p>R$ 39,99</p>
-        </PlanStyle>
-      </Link>
+      ))}
     </PlansContainer>
   )
 }

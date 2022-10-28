@@ -1,32 +1,79 @@
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useState, useContext } from 'react'
+import axios from 'axios'
+import AuthContext from '../../contexts/AuthContext'
+import { useEffect } from 'react'
 
 export default function Forms() {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      navigate('/subscriptions')
+    }
+  }, [])
+
+  const { setAuth } = useContext(AuthContext)
+  const [form, setForm] = useState({
+    email: '',
+    password: ''
+  })
+
+  function signIn(e) {
+    e.preventDefault()
+
+    axios
+      .post(
+        'https://mock-api.driven.com.br/api/v4/driven-plus/auth/login',
+        form
+      )
+      .then(res => {
+        setAuth(res.data.token)
+        localStorage.setItem('token', res.data.token)
+        {if (res.data.membership === null){
+          navigate('/subscriptions')
+        }}
+        
+      })
+      .catch(res => {
+        alert(res.response.data.message)
+      })
+  }
+
+  function handleForm(e) {
+    const { name, value } = e.target
+    setForm({ ...form, [name]: value })
+  }
+
   return (
     <>
-      <form>
+      <form onSubmit={signIn}>
         <Inputs>
           <div>
             <input
+              name="email"
               type="email"
-              onChange={'e => setEmail(e.target.value)'}
+              value={form.email}
+              onChange={handleForm}
               placeholder="E-mail"
               required
             />
           </div>
           <div>
             <input
-              type="text"
-              onChange={'e => setPassword(e.target.value)'}
+              name="password"
+              type="password"
+              value={form.password}
+              onChange={handleForm}
               placeholder="Senha"
               required
             />
           </div>
-          <Link to={'/subscriptions'}>
-            <Button type="submit" name="submit">
-              <p>ENTRAR</p>
-            </Button>
-          </Link>
+
+          <Button type="submit" name="submit">
+            <p>ENTRAR</p>
+          </Button>
         </Inputs>
       </form>
     </>

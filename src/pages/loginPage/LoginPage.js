@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Forms from './Forms'
 import logo from '../../assets/images/Driven_white.png'
 
-export default function LoginPage(params) {
+export default function LoginPage() {
   return (
     <PageContainer>
     <img src={logo} alt="Driven Plus" />
