@@ -1,19 +1,17 @@
 import styled from 'styled-components'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import logoPlan from '../../assets/images/logoplan.png'
+import { useState, useEffect, useContext } from 'react'
 import AuthContext from '../../contexts/AuthContext'
-import { useContext } from 'react'
 
 export default function PlansPage() {
-  
   const [plans, setPlans] = useState([])
-  const {auth} = useContext(AuthContext)
+  const { auth } = useContext(AuthContext)
 
   useEffect(() => {
     const promise = axios.get(
-      'https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships', {headers:{'Authorization':`Bearer ${auth}`}}
+      'https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships',
+      { headers: { Authorization: `Bearer ${auth}` } }
     )
 
     promise.then(res => {
@@ -35,13 +33,13 @@ export default function PlansPage() {
   return (
     <PlansContainer>
       <h2>Escolha seu Plano</h2>
-      {plans.map((plan) => (
+      {plans.map(plan => (
         <Link to={`/subscriptions/${plan.id}`}>
-        <PlanStyle key={plan.id}>
-          <img src={plan.image} />
-          <p>{plan.price}</p>
-        </PlanStyle>
-      </Link>
+          <PlanStyle key={plan.id}>
+            <img src={plan.image} />
+            <p>{plan.price}</p>
+          </PlanStyle>
+        </Link>
       ))}
     </PlansContainer>
   )

@@ -1,15 +1,12 @@
 import styled from 'styled-components'
 import Forms from './Forms'
-import logoPlan from '../../assets/images/logoplan.png'
 import Modal from './Modal'
 import taskList from '../../assets/images/task-list.png'
 import money from '../../assets/images/money.png'
 import { useParams } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useContext, useState } from 'react'
 import axios from 'axios'
 import AuthContext from '../../contexts/AuthContext'
-import { useContext } from 'react'
-import { useState } from 'react'
 
 export default function PlanPage() {
   const [plan, setPlan] = useState([])
@@ -24,12 +21,11 @@ export default function PlanPage() {
       )
       .then(res => setPlan(res.data))
       .catch(res => console.log(res.response.data.message))
-    console.log(plan.perks)
   }, [])
 
   return (
     <PlanContainer>
-      {/* <Modal /> */}
+      {/* {showModal? <Modal />: ''} */}
       <img src={plan.image} alt="Driven Plus" />
       <h2>{plan.name}</h2>
       <div>
@@ -38,9 +34,9 @@ export default function PlanPage() {
         </div>
         <ol>
           {plan.perks ?
-          plan.perks.map(b => (
-            <li>
-              <a href={b.link}>{b.title}</a>
+          plan.perks.map((b, index) => (
+            <li key={index}>
+              <a href={b.link}>{index+1}. {b.title}</a>
             </li>
           )): ""}
         </ol>
@@ -69,10 +65,15 @@ const PlanContainer = styled.div`
     font-weight: 700;
     font-size: 32px;
     color: #ffffff;
+    margin-bottom: 22px;
   }
 
   > div {
     margin-bottom: 34px;
+  }
+
+  > div > p {
+    margin-left: -3px;
   }
 
   > div > div {
@@ -80,8 +81,21 @@ const PlanContainer = styled.div`
     align-items: center;
   }
 
-  > div > div:first-of-type {
+  > div > div:first-of-type, >div > ol {
     margin-bottom: 10px;
+  }
+
+  > div > div:first-of-type > img {
+    margin-left: -5px;
+  }
+
+  > div > div:last-of-type > img {
+    margin-left: -2px;
+    margin-right: 4px;
+  }
+
+  > div > div:last-of-type {
+    margin-bottom: 4px;
   }
 
   > div p,
