@@ -3,10 +3,11 @@ import Forms from './Forms'
 import Modal from './Modal'
 import taskList from '../../assets/images/task-list.png'
 import money from '../../assets/images/money.png'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, Link } from 'react-router-dom'
 import { useEffect, useContext, useState } from 'react'
 import axios from 'axios'
 import AuthContext from '../../contexts/AuthContext'
+import goBack from '../../assets/images/arrow-left.svg'
 
 export default function PlanPage() {
   const { navigate } = useNavigate()
@@ -41,6 +42,9 @@ export default function PlanPage() {
 
   return (
     <PlanContainer>
+    <Link to='/subscriptions'>
+    <ArrowBack src={goBack} />
+    </Link>
       {showModal ? <Modal plan={plan} setShowModal={setShowModal} form={form} /> : ''}
       <img src={plan.image} alt="Driven Plus" />
       <h2>{plan.name}</h2>
@@ -126,4 +130,10 @@ const PlanContainer = styled.div`
     font-size: 16px;
     color: #ffffff;
   }
+`
+const ArrowBack = styled.img`
+  width: 28px;
+  position: fixed;
+  top: 20px;
+  left: 20px;
 `

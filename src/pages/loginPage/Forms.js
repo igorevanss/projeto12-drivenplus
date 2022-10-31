@@ -32,7 +32,10 @@ export default function Forms() {
         localStorage.setItem('token', res.data.token)
         {if (res.data.membership === null){
           navigate('/subscriptions')
-        }}
+        }else {
+          navigate('/home')
+        }
+      }
         
       })
       .catch(res => {

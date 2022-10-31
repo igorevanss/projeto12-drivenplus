@@ -2,10 +2,25 @@ import styled from 'styled-components'
 import userPic from '../../assets/images/user-pic.png'
 import PlanContext from '../../contexts/Userplan'
 import { useContext } from 'react'
+import axios from 'axios'
+import AuthContext from '../../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 export default function HomePage() {
   const { userPlan } = useContext(PlanContext)
-  console.log(userPlan)
+  const { auth } = useContext(AuthContext)
+  const navigate = useNavigate()
+
+  function cancelPlan() {
+    axios
+      .delete(
+        'https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions',
+        { headers: { Authorization: `Bearer ${auth}` } }
+      )
+      .then(() => navigate('/subscriptions'))
+      .catch(err => console.log(err.response.data.message))
+  }
+
   return (
     <HomeContainer>
       <HeaderContainer>
@@ -26,7 +41,7 @@ export default function HomePage() {
         <button>
           <p>Mudar plano</p>
         </button>
-        <button>
+        <button onClick={cancelPlan}>
           <p>Cancelar plano</p>
         </button>
       </FooterButtons>
