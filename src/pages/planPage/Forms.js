@@ -1,56 +1,22 @@
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-import AuthContext from '../../contexts/AuthContext'
-import { useState, useEffect, useContext } from 'react'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
 
-export default function Forms() {
-  const navigate = useNavigate()
-  const { auth } = useContext(AuthContext)
-  
-  const [form, setForm] = useState({
-    membershipId: '',
-    cardName: '',
-    cardNumber: '',
-    securityNumber: '',
-    expirationDate: ''
-  })
-  const [showModal, setShowModal] = useState(false)
+export default function Forms({ setShowModal, form, setForm }) {
+  function showModal(e) {
+    e.preventDefault()
+    setShowModal(true)
+  }
 
   function handleForm(e) {
     const { name, value } = e.target
     setForm({ ...form, [name]: value })
   }
 
-  function getPlan(e) {
-    e.preventDefault()
-
-    axios
-      .post(
-        'https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions',
-        form,
-        { headers: { Authorization: `Bearer ${auth}` } }
-      )
-      .then(res => {
-        localStorage.setItem('token', res.data.token)
-        {
-          if (res.data.membership === null) {
-            navigate('/subscriptions')
-          }
-        }
-      })
-      .catch(res => {
-        alert(res.response.data.message)
-      })
-
-      setShowModal(true)
-  }
   return (
-    <form onSubmit={getPlan}>
+    <form onSubmit={showModal}>
       <Inputs>
         <div>
           <input
+            name="cardName"
             type="text"
             value={form.cardName}
             onChange={handleForm}
@@ -60,6 +26,7 @@ export default function Forms() {
         </div>
         <div>
           <input
+            name="cardNumber"
             type="number"
             value={form.cardNumber}
             onChange={handleForm}
@@ -70,6 +37,7 @@ export default function Forms() {
         <HorizontalInputs>
           <div>
             <input
+              name="securityNumber"
               type="number"
               value={form.securityNumber}
               onChange={handleForm}
@@ -79,6 +47,7 @@ export default function Forms() {
           </div>
           <div>
             <input
+              name="expirationDate"
               type="month"
               value={form.expirationDate}
               onChange={handleForm}
@@ -87,11 +56,10 @@ export default function Forms() {
             />
           </div>
         </HorizontalInputs>
-        <Link to={'/subscriptions'}>
-          <Button type="submit" name="submit">
-            <p>ASSINAR</p>
-          </Button>
-        </Link>
+
+        <Button type="submit" name="submit">
+          <p>ASSINAR</p>
+        </Button>
       </Inputs>
     </form>
   )
@@ -108,6 +76,7 @@ const Inputs = styled.div`
     background: #ffffff;
     border-radius: 8px;
     padding-left: 14px;
+    outline: none;
   }
 
   > div > input::placeholder {
@@ -128,6 +97,7 @@ const HorizontalInputs = styled.div`
     background: #ffffff;
     border-radius: 8px;
     padding-left: 6px;
+    outline: none;
   }
 
   > div > input::placeholder {

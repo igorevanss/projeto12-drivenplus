@@ -1,20 +1,26 @@
 import styled from 'styled-components'
 import userPic from '../../assets/images/user-pic.png'
+import PlanContext from '../../contexts/Userplan'
+import { useContext } from 'react'
 
 export default function HomePage() {
+  const { userPlan } = useContext(PlanContext)
+  console.log(userPlan)
   return (
     <HomeContainer>
       <HeaderContainer>
-        <img /> <img src={userPic} alt="usuário" />
+        <img src={userPlan.membership.image} />{' '}
+        <img src={userPic} alt="usuário" />
       </HeaderContainer>
       <h2>Olá, fulano</h2>
       <BenefitsButtons>
-        <button>
-          <p>Solicitar brindes</p>
-        </button>
-        <button>
-          <p>Materiais bônus de web</p>
-        </button>
+        {userPlan.membership.perks.map(p => (
+          <button
+            onClick={() => window.open(p.link, '_blank', 'noopener,noreferrer')}
+          >
+            <p>{p.title}</p>
+          </button>
+        ))}
       </BenefitsButtons>
       <FooterButtons>
         <button>

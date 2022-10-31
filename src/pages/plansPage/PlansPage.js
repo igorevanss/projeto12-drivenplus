@@ -16,7 +16,6 @@ export default function PlansPage() {
 
     promise.then(res => {
       setPlans(res.data)
-      console.log(res.data)
     })
 
     promise.catch(err => {
@@ -28,14 +27,12 @@ export default function PlansPage() {
     return <p>Carregando...</p>
   }
 
-  console.log(plans)
-
   return (
     <PlansContainer>
       <h2>Escolha seu Plano</h2>
-      {plans.map(plan => (
+      {plans.map((plan, index) => (
         <Link to={`/subscriptions/${plan.id}`}>
-          <PlanStyle key={plan.id}>
+          <PlanStyle key={index}>
             <img src={plan.image} />
             <p>{plan.price}</p>
           </PlanStyle>

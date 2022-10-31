@@ -3,29 +3,45 @@ import Forms from './Forms'
 import Modal from './Modal'
 import taskList from '../../assets/images/task-list.png'
 import money from '../../assets/images/money.png'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useContext, useState } from 'react'
 import axios from 'axios'
 import AuthContext from '../../contexts/AuthContext'
 
 export default function PlanPage() {
+  const { navigate } = useNavigate()
+
   const [plan, setPlan] = useState([])
   const { idPlan } = useParams()
   const { auth } = useContext(AuthContext)
+  const [showModal, setShowModal] = useState(false)
+  const [form, setForm] = useState({
+    membershipId: '',
+    cardName: '',
+    cardNumber: '',
+    securityNumber: '',
+    expirationDate: ''
+  })
 
   useEffect(() => {
+    if (auth === null) {
+      navigate('/subscriptions')
+    }
     axios
       .get(
         `https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships/${idPlan}`,
         { headers: { Authorization: `Bearer ${auth}` } }
       )
-      .then(res => setPlan(res.data))
+      .then(res => {
+        setForm({ ...form, 'membershipId': res.data.id })
+        setPlan(res.data)
+      })
       .catch(res => console.log(res.response.data.message))
   }, [])
 
   return (
     <PlanContainer>
-      {/* {showModal? <Modal />: ''} */}
+      {showModal ? <Modal plan={plan} setShowModal={setShowModal} form={form} /> : ''}
       <img src={plan.image} alt="Driven Plus" />
       <h2>{plan.name}</h2>
       <div>
@@ -33,19 +49,22 @@ export default function PlanPage() {
           <img src={taskList} /> <p>Benefícios:</p>
         </div>
         <ol>
-          {plan.perks ?
-          plan.perks.map((b, index) => (
-            <li key={index}>
-              <a href={b.link}>{index+1}. {b.title}</a>
-            </li>
-          )): ""}
+          {plan.perks
+            ? plan.perks.map((b, index) => (
+                <li key={index}>
+                  <a href={b.link}>
+                    {index + 1}. {b.title}
+                  </a>
+                </li>
+              ))
+            : ''}
         </ol>
         <div>
           <img src={money} /> <p>Preco:</p>
         </div>
         <p>R$ {plan.price} cobrados mensalmente</p>
       </div>
-      <Forms />
+      <Forms setShowModal={setShowModal} form={form} setForm={setForm} />
     </PlanContainer>
   )
 }
@@ -81,7 +100,8 @@ const PlanContainer = styled.div`
     align-items: center;
   }
 
-  > div > div:first-of-type, >div > ol {
+  > div > div:first-of-type,
+  > div > ol {
     margin-bottom: 10px;
   }
 
